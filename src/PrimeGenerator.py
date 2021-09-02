@@ -4,8 +4,8 @@ import random
 class PrimeGenerator:
     def __init__(
         self,
-        start: int = 1000000000000000000000000,
-        end: int = 1000000000000000000000000000,
+        start: int = pow(10, 28),
+        end: int = pow(10, 32),
         repetitions: int = 10,
     ) -> None:
         """

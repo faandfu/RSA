@@ -28,7 +28,7 @@ class RSA:
         f = (p - 1) * (q - 1)
         e_generator = PrimeGenerator(3, f)
         e = e_generator.get_probable_prime()
-        d = self.egcd(e, f)
+        d = self.get_mult_inverse(e, f)
 
         public_key = PublicKey(n, e)
         private_key = PrivateKey(n, d)
@@ -43,11 +43,23 @@ class RSA:
         m = pow(y, private_key.d, private_key.n)
         return binascii.unhexlify(format(m, "x").encode("utf-8")).decode("utf-8")
 
-    def egcd(self, a, b):
-        x, y, u, v = 0, 1, 1, 0
+    def get_mult_inverse(self, a:int, b:int) -> int:
+        """
+        returns the multiplicative inverse of a mod b (using the extended euclidean algorithm).
+        """
+        x = 0
+        y = 1
+        u = 1
+        v = 0
         while a != 0:
-            q, r = b // a, b % a
-            m, n = x - u * q, y - v * q
-            b, a, x, y, u, v = a, r, u, v, m, n
-            gcd = b
+            q = b // a
+            r = b % a
+            m = x - u * q
+            n = y - v * q
+            b = a
+            a = r
+            x = u
+            y = v
+            u = m
+            v = n
         return x
